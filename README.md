@@ -40,3 +40,11 @@ Licensed under the MIT License.
 
 
 ---
+
+---
+
+## 📦 Overview
+
+**sysframe** is a Node.js-based framework system designed to run WhatsApp bots in a modular, synchronous, and efficient manner. This bot has a two-way synchronization system between external and local APIs.
+
+---
