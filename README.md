@@ -18,8 +18,8 @@
 
 ### 1. Clone Repo
 
-```bash```
-git clone https://github.com/sysframe/sysframe.git
+```bash
+git clone https://github.com/sysframe/sysframe.git```
 cd sysframe
 
 2. Install Dependency
