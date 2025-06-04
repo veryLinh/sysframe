@@ -34,11 +34,10 @@ API_KEY=your_api_key
 
 ---
 
-## 📦 Overview
+📜 License
 
-```📄 License
-
-This project is licensed under the MIT License.
+Licensed under the MIT License.
 © 2025 sysframe Framework
+
 
 ---
