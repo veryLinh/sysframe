@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node c.js"
   },
-  "author": "Na",
+  "author": "Nava Linh",
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
