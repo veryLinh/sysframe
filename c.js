@@ -264,6 +264,15 @@ async function startWhatsAppBot() {
     }
   })
 
+  XianZhi.ev.on('messages.update', async (updates) => {
+  try {
+    const handleUpdate = require('../../x-system/message')
+    handleUpdate(XianZhi, updates)
+  } catch (err) {
+    console.error(err)
+  }
+})
+
   XianZhi.ev.on('call', async (celled) => {
     let botNumber = await XianZhi.decodeJid(XianZhi.user.id)
     let lol = setting.anticall
