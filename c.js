@@ -266,8 +266,10 @@ async function startWhatsAppBot() {
 
   XianZhi.ev.on('messages.update', async (updates) => {
   try {
+    console.log('1')
     const handleUpdate = require('../../x-system/message')
     handleUpdate(XianZhi, updates)
+    console.log('2')
   } catch (err) {
     console.error(err)
   }
