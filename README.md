@@ -18,7 +18,7 @@
 
 ### 1. Clone Repo
 
-```bash
+bash
 git clone https://github.com/sysframe/sysframe.git
 cd sysframe
 
