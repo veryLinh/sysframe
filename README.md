@@ -18,7 +18,7 @@
 
 ### 1. Clone Repo
 
-bash
+```bash```
 git clone https://github.com/sysframe/sysframe.git
 cd sysframe
 
@@ -38,13 +38,5 @@ API_KEY=your_api_key
 Licensed under the MIT License.
 © 2025 sysframe Framework
 
-
----
-
----
-
-## 📦 Overview
-
-**sysframe** is a Node.js-based framework system designed to run WhatsApp bots in a modular, synchronous, and efficient manner. This bot has a two-way synchronization system between external and local APIs.
 
 ---
