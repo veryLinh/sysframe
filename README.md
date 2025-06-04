@@ -31,7 +31,7 @@ npm install
 API_URL=https://api.example.com
 API_KEY=your_api_key
 
-
+---
 
 ## 📜 License
 
