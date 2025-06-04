@@ -29,10 +29,8 @@ npm install
 3. Buat File .env
 
 API_URL=https://api.example.com
-API_KEY=your_api_key
+API_KEY=your_api_key```
 
-
----
 
 ---
 
