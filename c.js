@@ -314,7 +314,7 @@ async function startWhatsAppBot() {
   XianZhi.ev.on('group-participants.update', async (anu) => {
     const iswel = db.data.chats[anu.id]?.wlcm || false;
     const isLeft = db.data.chats[anu.id]?.left || false;
-    const detect = db.data.chats[m.chat].autodetect;
+    const detect = db.data.chats[anu.id].autodetect;
 
     let {
       welcome
@@ -323,7 +323,7 @@ async function startWhatsAppBot() {
   })
 
 XianZhi.ev.on('groups.update', async (updates) => {
-    const detect = db.data.chats[m.chat].autodetect
+    const detect = db.data.chats[updates.id].autodetect
     let {
       detected
     } = require('../../lib-signal/navigation/message');
