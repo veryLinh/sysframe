@@ -309,7 +309,7 @@ async function startWhatsAppBot() {
     await welcome(iswel, isLeft, XianZhi, anu);
   })
   
-  XianZhi.ev.on('groups.update', async (updates) => {
+  /*XianZhi.ev.on('groups.update', async (updates) => {
     try {
         for (const update of updates) {
             const groupId = XianZhi.decodeJid(update.id)
@@ -362,7 +362,7 @@ async function startWhatsAppBot() {
     } catch (err) {
         console.error('[❌ ERROR groups.update]', err)
     }
-})
+})*/
   
   getHandlerMsg(XianZhi, store)
 
