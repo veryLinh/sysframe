@@ -274,6 +274,8 @@ async function startWhatsAppBot() {
   }
 })
 
+  getHandlerMsg(XianZhi, store)
+
   XianZhi.ev.on('call', async (celled) => {
     let botNumber = await XianZhi.decodeJid(XianZhi.user.id)
     let lol = setting.anticall
@@ -312,118 +314,21 @@ async function startWhatsAppBot() {
   XianZhi.ev.on('group-participants.update', async (anu) => {
     const iswel = db.data.chats[anu.id]?.wlcm || false;
     const isLeft = db.data.chats[anu.id]?.left || false;
+    const detect = db.data.chats[m.chat].autodetect;
 
     let {
       welcome
     } = require('../../lib-signal/navigation/welcome');
-    await welcome(iswel, isLeft, XianZhi, anu);
+    await welcome(detect, iswel, isLeft, XianZhi, anu);
   })
-  
-  /*XianZhi.ev.on('groups.update', async (updates) => {
-    try {
-        for (const update of updates) {
-            const groupId = XianZhi.decodeJid(update.id)
-            console.log('1')
-            if (!groupId || !groupId.endsWith('@g.us') || groupId === 'status@broadcast') continue
-            console.log('2')
-
-            // Ambil metadata grup
-            const metadata = await XianZhi.groupMetadata(groupId).catch(() => null)
-            if (!metadata) continue
-            console.log(metadata)
-
-            // Template notifikasi default
-            const templates = {
-                desc: '📃 *Deskripsi grup telah diubah:*\n\n@desc',
-                subject: '🏷️ *Nama grup telah diubah menjadi:*\n\n@subject',
-                icon: '🖼️ *Icon grup telah diganti.*',
-                revoke: '🔗 *Tautan undangan grup telah diperbarui:*\n\n@revoke',
-                announceOn: '🔒 *Grup telah ditutup hanya untuk admin.*',
-                announceOff: '🔓 *Grup dibuka untuk semua peserta.*',
-                restrictOn: '🔐 *Hanya admin yang dapat mengubah info grup.*',
-                restrictOff: '🌐 *Semua peserta dapat mengubah info grup.*',
-            }
-
-            // Fungsi bantu bikin teks dari perubahan
-            const makeText = (key, val) => {
-                const template = templates[key]
-                return val ? template.replace(`@${key}`, val) : template
-            }
-            console.log('3')
-
-            // Deteksi perubahan dan buat teksnya
-            let text = ''
-            if (update.desc) text = makeText('desc', update.desc)
-            else if (update.subject) text = makeText('subject', update.subject)
-            else if (update.icon) text = makeText('icon')
-            else if (update.revoke) text = makeText('revoke', update.revoke)
-            else if (update.announce === true) text = makeText('announceOn')
-            else if (update.announce === false) text = makeText('announceOff')
-            else if (update.restrict === true) text = makeText('restrictOn')
-            else if (update.restrict === false) text = makeText('restrictOff')
-
-            // Kirim jika ada perubahan
-            if (text) {
-                await XianZhi.sendMessage(groupId, { text }, { quoted: null })
-                console.log('4')
-            }
-            console.log('5')
-        }
-    } catch (err) {
-        console.error('[❌ ERROR groups.update]', err)
-    }
-})*/
 
 XianZhi.ev.on('groups.update', async (updates) => {
-    try {
-        for (const update of updates) {
-            const groupId = XianZhi.decodeJid(update.id)
-            if (!groupId || !groupId.endsWith('@g.us') || groupId === 'status@broadcast') continue
-
-            const metadata = await XianZhi.groupMetadata(groupId).catch(() => null)
-            if (!metadata) continue
-
-            const templates = {
-                desc: '📃 *Deskripsi grup telah diubah:*\n\n@desc',
-                subject: '🏷️ *Nama grup telah diubah menjadi:*\n\n@subject',
-                icon: '🖼️ *Icon grup telah diganti.*',
-                revoke: '🔗 *Tautan undangan grup telah diperbarui:*\n\nhttps://chat.whatsapp.com/@revoke',
-                announceOn: '🔒 *Grup telah ditutup hanya untuk admin.*',
-                announceOff: '🔓 *Grup dibuka untuk semua peserta.*',
-                restrictOn: '🔐 *Hanya admin yang dapat mengubah info grup.*',
-                restrictOff: '🌐 *Semua peserta dapat mengubah info grup.*',
-            }
-
-            const makeText = (key, val = '') => {
-                const template = templates[key]
-                return val ? template.replace(`@${key}`, val) : template
-            }
-
-            let text = ''
-
-            if ('desc' in update) text = makeText('desc', update.desc)
-            else if ('subject' in update) text = makeText('subject', update.subject)
-            else if ('announce' in update) text = makeText(update.announce ? 'announceOn' : 'announceOff')
-            else if ('restrict' in update) text = makeText(update.restrict ? 'restrictOn' : 'restrictOff')
-            else {
-                // Cek perubahan icon atau link
-                if ('icon' in update) text = makeText('icon')
-                else if ('revoke' in update) {
-                    const code = await XianZhi.groupInviteCode(groupId).catch(() => null)
-                    if (code) text = makeText('revoke', code)
-                }
-            }
-
-            if (text) {
-                await XianZhi.sendMessage(groupId, { text }, { quoted: null })
-            }
-        }
-    } catch (err) {
-        console.error('[❌ ERROR groups.update]', err)
-    }
+    const detect = db.data.chats[m.chat].autodetect
+    let {
+      detected
+    } = require('../../lib-signal/navigation/message');
+    await detected(detect, XianZhi, updates)
 })
-  
-  getHandlerMsg(XianZhi, store)
 
   XianZhi.ev.on("connection.update", async (update) => {
     const {
