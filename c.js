@@ -209,60 +209,76 @@ async function startWhatsAppBot() {
 
   const processedMessages = new Set()
   XianZhi.ev.on('messages.upsert', async (chatUpdate) => {
-    try {
-      const mek = chatUpdate.messages[0]
-      if (!mek.message) return
-      if (processedMessages.has(mek.key.id)) return
-      processedMessages.add(mek.key.id)
-      mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-      if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-        if (setting.autoviewsw === true) {
-          let getreact = swreact[Math.floor(Math.random() * swreact.length)];
-          await XianZhi.readMessages([mek.key]);
-          XianZhi.sendMessage(
-            'status@broadcast', {
-              react: {
-                text: getreact,
-                key: mek.key
-              }
-            }, {
-              statusJidList: [mek.key.participant]
-            },
-          )
-        }
-        return
-      }
-      const remoteJid = mek.key.remoteJid
-      const userId = mek.key.fromMe ? botNumber : mek.key.participant
-      const currentTimestamp = Date.now()
-      if (!store.presences) store.presences = {}
-      store.presences[userId] = {
-        lastOnline: currentTimestamp
-      }
-      if (!store.messages[remoteJid]) store.messages[remoteJid] = []
-      const simplifiedMessage = {
-        key: mek.key,
-        messageTimestamp: mek.messageTimestamp,
-        pushName: mek.pushName || null,
-        message: mek.message
-      }
-      store.messages[remoteJid].push(simplifiedMessage)
-      if (store.messages[remoteJid].length > 50) {
-        store.messages[remoteJid] = store.messages[remoteJid].slice(-50)
-      }
-      if (!store.chats.some(chat => chat.id === remoteJid)) {
-        store.chats.push({
-          id: remoteJid,
-          conversationTimestamp: mek.messageTimestamp || Date.now()
-        })
-      }
+  try {
+    const mek = chatUpdate.messages[0];
+    if (!mek) return;
 
-      const m = smsg(XianZhi, mek, store)
-      require('../../XianZhi')(XianZhi, m, chatUpdate, mek, store)
-    } catch (err) {
-      console.error(err)
+    // Tangani perubahan grup meskipun tidak ada .message
+    if (mek.messageStubType) {
+      const m = smsg(XianZhi, mek, store);
+      require('./x-system/message')(XianZhi, m); // Pastikan path sesuai struktur kamu
     }
-  })
+
+    // Jika tidak ada pesan dan bukan stub, keluar
+    if (!mek.message) return;
+
+    if (processedMessages.has(mek.key.id)) return;
+    processedMessages.add(mek.key.id);
+
+    mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage')
+      ? mek.message.ephemeralMessage.message
+      : mek.message;
+
+    // Auto-react status broadcast
+    if (mek.key?.remoteJid === 'status@broadcast') {
+      if (setting.autoviewsw === true) {
+        let getreact = swreact[Math.floor(Math.random() * swreact.length)];
+        await XianZhi.readMessages([mek.key]);
+        XianZhi.sendMessage('status@broadcast', {
+          react: { text: getreact, key: mek.key }
+        }, {
+          statusJidList: [mek.key.participant]
+        });
+      }
+      return;
+    }
+
+    // Simpan presensi
+    const remoteJid = mek.key.remoteJid;
+    const userId = mek.key.fromMe ? botNumber : mek.key.participant;
+    const currentTimestamp = Date.now();
+
+    if (!store.presences) store.presences = {};
+    store.presences[userId] = { lastOnline: currentTimestamp };
+
+    // Simpan riwayat pesan
+    if (!store.messages[remoteJid]) store.messages[remoteJid] = [];
+    store.messages[remoteJid].push({
+      key: mek.key,
+      messageTimestamp: mek.messageTimestamp,
+      pushName: mek.pushName || null,
+      message: mek.message
+    });
+    if (store.messages[remoteJid].length > 50) {
+      store.messages[remoteJid] = store.messages[remoteJid].slice(-50);
+    }
+
+    // Simpan daftar chat
+    if (!store.chats.some(chat => chat.id === remoteJid)) {
+      store.chats.push({
+        id: remoteJid,
+        conversationTimestamp: mek.messageTimestamp || Date.now()
+      });
+    }
+
+    // Lanjut ke handler utama
+    const m = smsg(XianZhi, mek, store);
+    require('../../XianZhi')(XianZhi, m, chatUpdate, mek, store);
+
+  } catch (err) {
+    console.error(err);
+  }
+})
 
   XianZhi.ev.on('call', async (celled) => {
     let botNumber = await XianZhi.decodeJid(XianZhi.user.id)
