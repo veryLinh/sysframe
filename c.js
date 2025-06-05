@@ -313,11 +313,14 @@ async function startWhatsAppBot() {
     try {
         for (const update of updates) {
             const groupId = XianZhi.decodeJid(update.id)
+            console.log('1')
             if (!groupId || !groupId.endsWith('@g.us') || groupId === 'status@broadcast') continue
+            console.log('2')
 
             // Ambil metadata grup
             const metadata = await XianZhi.groupMetadata(groupId).catch(() => null)
             if (!metadata) continue
+            console.log(metadata)
 
             // Template notifikasi default
             const templates = {
@@ -336,6 +339,7 @@ async function startWhatsAppBot() {
                 const template = templates[key]
                 return val ? template.replace(`@${key}`, val) : template
             }
+            console.log('3')
 
             // Deteksi perubahan dan buat teksnya
             let text = ''
@@ -351,7 +355,9 @@ async function startWhatsAppBot() {
             // Kirim jika ada perubahan
             if (text) {
                 await XianZhi.sendMessage(groupId, { text }, { quoted: null })
+                console.log('4')
             }
+            console.log('5')
         }
     } catch (err) {
         console.error('[❌ ERROR groups.update]', err)
