@@ -312,14 +312,14 @@ async function startWhatsAppBot() {
   XianZhi.ev.on('groups.update', async (updates) => {
     try {
         for (const update of updates) {
-            const groupId = XianXhi.decodeJid(update.id)
+            const groupId = XianZhi.decodeJid(update.id)
             if (!groupId || !groupId.endsWith('@g.us') || groupId === 'status@broadcast') continue
 
-            // Ambil metadata grup terbaru
-            const metadata = await XianXhi.groupMetadata(groupId).catch(() => null)
+            // Ambil metadata grup
+            const metadata = await XianZhi.groupMetadata(groupId).catch(() => null)
             if (!metadata) continue
 
-            // Template bawaan (default hardcoded)
+            // Template notifikasi default
             const templates = {
                 desc: '📃 *Deskripsi grup telah diubah:*\n\n@desc',
                 subject: '🏷️ *Nama grup telah diubah menjadi:*\n\n@subject',
@@ -331,11 +331,13 @@ async function startWhatsAppBot() {
                 restrictOff: '🌐 *Semua peserta dapat mengubah info grup.*',
             }
 
-            // Fungsi bantu buat teks
-            const makeText = (key: string, val?: string) =>
-                val ? templates[key].replace(`@${key}`, val) : templates[key]
+            // Fungsi bantu bikin teks dari perubahan
+            const makeText = (key, val) => {
+                const template = templates[key]
+                return val ? template.replace(`@${key}`, val) : template
+            }
 
-            // Deteksi perubahan dan respon
+            // Deteksi perubahan dan buat teksnya
             let text = ''
             if (update.desc) text = makeText('desc', update.desc)
             else if (update.subject) text = makeText('subject', update.subject)
@@ -348,7 +350,7 @@ async function startWhatsAppBot() {
 
             // Kirim jika ada perubahan
             if (text) {
-                await XianXhi.sendMessage(groupId, { text }, { quoted: null })
+                await XianZhi.sendMessage(groupId, { text }, { quoted: null })
             }
         }
     } catch (err) {
