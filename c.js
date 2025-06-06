@@ -323,8 +323,9 @@ async function startWhatsAppBot() {
   })
 
 XianZhi.ev.on('groups.update', async (updates) => {
-   console.log(updates)
-   console.log(updates.id)
+   const update = updates[0]
+   console.log(update)
+   console.log(update.id)
     /*const detect = db.data.chats[updates.id].autodetect
     let {
       detected
