@@ -323,12 +323,13 @@ async function startWhatsAppBot() {
   })
 
 XianZhi.ev.on('groups.update', async (updates) => {
+   console.log(updates)
    console.log(updates.id)
-    const detect = db.data.chats[updates.id].autodetect
+    /*const detect = db.data.chats[updates.id].autodetect
     let {
       detected
     } = require('../../lib-signal/navigation/message');
-    await detected(detect, XianZhi, updates)
+    await detected(detect, XianZhi, updates)*/
 })
 
   XianZhi.ev.on("connection.update", async (update) => {
