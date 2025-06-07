@@ -331,12 +331,6 @@ XianZhi.ev.on('groups.update', async (updates) => {
     await detected(detect, XianZhi, update)
 })
 
-XianZhi.ev.on('messages.upsert', ({ messages, type }) => {
-  const msg = messages[0];
-  console.log('[Pesan Masuk]', messages);
-  console.log('[Pesan Masuk] 2', type);
-})
-
   XianZhi.ev.on("connection.update", async (update) => {
     const {
       connection,
