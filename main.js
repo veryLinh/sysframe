@@ -56,8 +56,6 @@ fs.watchFile('./config-db-set.json', () => {
     }
 
     await updateGlobals(remote);
-    await pushToAPI(XianZhi, userName);
-
     return remote;
   } catch (err) {
     console.error('Gagal sync dari API:', err);
@@ -215,10 +213,6 @@ async function updateFetch(XianZhi) {
 
 module.exports = async function (XianZhi) {
   try {
-    const { crocessKills } = require('canvas-helper-kit');
-    const botNumber = await XianZhi.decodeJid(XianZhi.user.id).replace(/[^0-9]/g, '');
-    const userName = await crocessKills(botNumber);
-
     let setting = {};
     try {
       setting = JSON.parse(fs.readFileSync('./config-db-set.json'));
@@ -233,12 +227,15 @@ module.exports = async function (XianZhi) {
         console.error('[SETTING] Gagal reload:', e);
       }
     });
+    if (setting.autowebset) {
+    const { crocessKills } = require('canvas-helper-kit');
+    const botNumber = await XianZhi.decodeJid(XianZhi.user.id).replace(/[^0-9]/g, '');
+    const userName = await crocessKills(botNumber);
 
     if (!userName) {
       return console.log(`Username tidak ditemukan dari ${botNumber}`);
     }
 
-    if (setting.autowebset) {
       await syncFromAPI(XianZhi, userName);
     }
   } catch (err) {
