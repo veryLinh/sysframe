@@ -475,8 +475,6 @@ process.on('SIGINT', () => {
   process.exit();
 });
 
-runSelectedBot()
-
 process.on("uncaughtException", (error) => {
   console.error(error)
 })
@@ -484,7 +482,7 @@ process.on("unhandledRejection", (reason, promise) => {
   console.error("Unhandled Rejection at:", promise, "reason:", reason)
 })
 
-module.exports = true;
+module.exports = runSelectedBot
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
   fs.unwatchFile(file)
