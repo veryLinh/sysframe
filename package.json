@@ -9,15 +9,6 @@
   "author": "Nava Linh",
   "license": "MIT",
   "dependencies": {
-    "@google/generative-ai": "^0.24.0",
-    "artificial": "npm:veynlinh-sky",
-    "interactive": "npm:viry-nexa",
-    "javascript-obfuscator": "^4.1.0",
-    "node-os-utils": "1.3.7",
-    "node-synct": "^2.4.8",
-    "canvas": "^2.11.2",
-    "canvas-helper-kit": "npm:canvas-chache-kit",
-    "genshin-db": "^5.1.11",
-    "modsys-cloud": "npm:mod-cloud"
+
   }
 }
